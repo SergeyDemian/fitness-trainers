@@ -12,7 +12,7 @@ tags:
   - name: training
     description: Сущность Тренировка
 paths:
-  /traning/create:
+  /training/create:
     post:
       tags:
         - training
@@ -22,7 +22,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TraningCreateRequest'
+              $ref: '#/components/schemas/TrainingCreateRequest'
       responses:
         200:
           description: Success
@@ -31,7 +31,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TrainingCreateResponse'
 
-  /traning/read:
+  /training/read:
     post:
       tags:
         - training
@@ -41,7 +41,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TraningReadRequest'
+              $ref: '#/components/schemas/TrainingReadRequest'
       responses:
         200:
           description: Success
@@ -50,7 +50,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TrainingReadResponse'
 
-  /traning/update:
+  /training/update:
     post:
       tags:
         - training
@@ -60,7 +60,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TraningUpdateRequest'
+              $ref: '#/components/schemas/TrainingUpdateRequest'
       responses:
         200:
           description: Success
@@ -69,7 +69,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TrainingUpdateResponse'
 
-  /traning/delete:
+  /training/delete:
     post:
       tags:
         - training
@@ -79,7 +79,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TraningDeleteRequest'
+              $ref: '#/components/schemas/TrainingDeleteRequest'
       responses:
         200:
           description: Success
@@ -88,7 +88,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TrainingDeleteResponse'
 
-  /traning/search:
+  /training/search:
     post:
       tags:
         - training
@@ -98,7 +98,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TraningSearchRequest'
+              $ref: '#/components/schemas/TrainingSearchRequest'
       responses:
         200:
           description: Success
@@ -123,39 +123,238 @@ components:
       discriminator:
         propertyName: requestType
         mapping:
-          create: '#/components/schemas/TraningCreateRequest'
-          read:   '#/components/schemas/TraningReadRequest'
-          update: '#/components/schemas/TraningUpdateRequest'
-          delete: '#/components/schemas/TraningDeleteRequest'
-          search: '#/components/schemas/TraningSearchRequest'
-          offers: '#/components/schemas/TraningOffersRequest'
+          create: '#/components/schemas/TrainingCreateRequest'
+          read:   '#/components/schemas/TrainingReadRequest'
+          update: '#/components/schemas/TrainingUpdateRequest'
+          delete: '#/components/schemas/TrainingDeleteRequest'
+          search: '#/components/schemas/TrainingSearchRequest'
 
-    TraningCreateRequest:
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/TrainingCreateResponse'
+          read:   '#/components/schemas/TrainingReadResponse'
+          update: '#/components/schemas/TrainingUpdateResponse'
+          delete: '#/components/schemas/TrainingDeleteResponse'
+          search: '#/components/schemas/TrainingSearchResponse'
+          offers: '#/components/schemas/TrainingOffersResponse'
+          init:   '#/components/schemas/TrainingInitResponse'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    TrainingCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TrainingResponseSingle'
+
+    TrainingReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TrainingResponseSingle'
+
+    TrainingUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TrainingResponseSingle'
+
+    TrainingDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TrainingResponseSingle'
+
+    TrainingSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/TrainingResponseMulti'
+
+    TrainingInitResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+
+    TrainingResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом объявления
+          properties:
+            training:
+              $ref: '#/components/schemas/TrainingResponseObject'
+
+    TrainingResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            trainings:
+              type: array
+              items:
+                $ref: '#/components/schemas/TrainingResponseObject'
+
+    TrainingResponseObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseTraining'
+        - type: object
+          description: Объект, который возвращается в ответе бэкенда
+          properties:
+            id:
+              $ref: '#/components/schemas/TrainingId'
+            lock:
+              $ref: '#/components/schemas/TrainingLock'
+
+    TrainingCreateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - type: object
           properties:
             training:
-              $ref: '#/components/schemas/TraningCreateObject'
+              $ref: '#/components/schemas/TrainingCreateObject'
 
-
-    TraningCreateObject:
+    TrainingReadRequest:
       allOf:
-        - $ref: '#/components/schemas/BaseTraning'
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            training:
+              $ref: '#/components/schemas/TrainingReadObject'
+
+    TrainingUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            training:
+              $ref: '#/components/schemas/TrainingUpdateObject'
+
+    TrainingDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            training:
+              $ref: '#/components/schemas/TrainingDeleteObject'
+
+    TrainingSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            trainingFilter:
+              $ref: '#/components/schemas/TrainingSearchFilter'
+
+    TrainingSearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchByClient:
+          type: string
+          description: ФИО клиента для поиска
+
+    TrainingDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/TrainingId'
+
+    TrainingUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseTraining'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/TrainingId'
+
+    TrainingCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseTraining'
+          
+    TrainingReadObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/TrainingId'
 
 
-    BaseTraning:
+    BaseTraining:
       type: object
       description: Объект описывает свойства, одинаковые для create и update
       properties:
-        title:
+        dateTime:
           type: string
-          description: Заголовок объявления
-        description:
-          type: string
-          description: Описание объявления
-        adType:
-          $ref: '#/components/schemas/DealSide'
-        visibility:
-          $ref: '#/components/schemas/AdVisibility'
+          format: date-time
+          description: Дата и время тренировки
+        clientId:
+          $ref: '#/components/schemas/ClientId'
+        paymentId:
+          $ref: '#/components/schemas/PaymentId'
+        trainingComplexIds:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/TrainingComplexId'
+        load:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Load'
 
+    ClientId:
+      type: string
+      description: Идентификатор пользователя
+
+    PaymentId:
+      type: string
+      description: Идентификатор сущности оплаты
+
+    TrainingComplexId:
+      type: string
+      description: Список id объектов комплекса упражнений
+
+    Load:
+      type: string
+      description: Тип нагрузки на клиента
+      enum:
+        - hard
+        - medium
+        - low
+          
+    TrainingId:
+      type: string
+      description: Идентификатор тренировки клиента
+
+    TrainingLock:
+      type: string
+      description: Версия оптимистичной блокировки
