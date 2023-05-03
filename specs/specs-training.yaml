@@ -1,0 +1,161 @@
+openapi: 3.0.4
+info:
+  title: fitness-trainers
+  description: Сервис записи на тренировку. Ведение клинета фитнесс тренером.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: training
+    description: Сущность Тренировка
+paths:
+  /traning/create:
+    post:
+      tags:
+        - training
+      operationId: trainingCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraningCreateRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingCreateResponse'
+
+  /traning/read:
+    post:
+      tags:
+        - training
+      operationId: trainingRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraningReadRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingReadResponse'
+
+  /traning/update:
+    post:
+      tags:
+        - training
+      operationId: trainingUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraningUpdateRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingUpdateResponse'
+
+  /traning/delete:
+    post:
+      tags:
+        - training
+      operationId: trainingDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraningDeleteRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingDeleteResponse'
+
+  /traning/search:
+    post:
+      tags:
+        - training
+      operationId: trainingSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TraningSearchRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingSearchResponse'
+
+components:
+  schemas:
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/TraningCreateRequest'
+          read:   '#/components/schemas/TraningReadRequest'
+          update: '#/components/schemas/TraningUpdateRequest'
+          delete: '#/components/schemas/TraningDeleteRequest'
+          search: '#/components/schemas/TraningSearchRequest'
+          offers: '#/components/schemas/TraningOffersRequest'
+
+    TraningCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            training:
+              $ref: '#/components/schemas/TraningCreateObject'
+
+
+    TraningCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseTraning'
+
+
+    BaseTraning:
+      type: object
+      description: Объект описывает свойства, одинаковые для create и update
+      properties:
+        title:
+          type: string
+          description: Заголовок объявления
+        description:
+          type: string
+          description: Описание объявления
+        adType:
+          $ref: '#/components/schemas/DealSide'
+        visibility:
+          $ref: '#/components/schemas/AdVisibility'
+
