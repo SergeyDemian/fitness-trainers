@@ -154,7 +154,6 @@ components:
           update: '#/components/schemas/TrainingUpdateResponse'
           delete: '#/components/schemas/TrainingDeleteResponse'
           search: '#/components/schemas/TrainingSearchResponse'
-          offers: '#/components/schemas/TrainingOffersResponse'
           init:   '#/components/schemas/TrainingInitResponse'
 
     Error:
