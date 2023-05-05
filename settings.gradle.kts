@@ -18,6 +18,9 @@ pluginManagement {
 
 include(
     "home-work-1",
-    "fitness-trainers-api",
+    "fitness-trainers-api-v1",
+    "fitness-trainers-api-v2",
+    "fitness-trainers-common",
+    "fitness-trainers-mappers-v1",
     "fitness-trainers-app"
 )

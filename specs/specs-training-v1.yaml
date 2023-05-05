@@ -276,9 +276,10 @@ components:
       type: object
       description: Набор фильтров для поиска
       properties:
-        searchByClient:
+        searchString:
           type: string
-          description: ФИО клиента для поиска
+          description: Строка для поиска
+          example: ФИО клиента
 
     TrainingDeleteObject:
       allOf:
@@ -317,30 +318,12 @@ components:
           description: Дата и время тренировки
         clientId:
           $ref: '#/components/schemas/ClientId'
-        paymentId:
-          $ref: '#/components/schemas/PaymentId'
-        trainingComplexIds:
-          type: array
-          uniqueItems: true
-          items:
-            $ref: '#/components/schemas/TrainingComplexId'
         load:
-          type: array
-          uniqueItems: true
-          items:
-            $ref: '#/components/schemas/Load'
+          $ref: '#/components/schemas/Load'
 
     ClientId:
       type: string
       description: Идентификатор пользователя
-
-    PaymentId:
-      type: string
-      description: Идентификатор сущности оплаты
-
-    TrainingComplexId:
-      type: string
-      description: Список id объектов комплекса упражнений
 
     Load:
       type: string
