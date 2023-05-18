@@ -21,6 +21,6 @@ include(
     "fitness-trainers-api-v1",
     "fitness-trainers-api-v2",
     "fitness-trainers-common",
-    "fitness-trainers-mappers-v1",
+    "fitness-trainers-mappers",
     "fitness-trainers-app"
 )

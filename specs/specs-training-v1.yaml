@@ -229,12 +229,27 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/TrainingId'
-            lock:
-              $ref: '#/components/schemas/TrainingLock'
+            permissions:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/TrainingPermissions'
+
+    TrainingPermissions:
+      type: string
+      description: Доступы для клиента для операций над объявлением
+      enum:
+        - read
+        - update
+        - delete
+        - makeVisiblePublic
+        - makeVisibleOwn
+        - makeVisibleGroup
 
     TrainingCreateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TrainingRequestDebug'
         - type: object
           properties:
             training:
@@ -243,6 +258,7 @@ components:
     TrainingReadRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TrainingRequestDebug'
         - type: object
           properties:
             training:
@@ -251,6 +267,7 @@ components:
     TrainingUpdateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TrainingRequestDebug'
         - type: object
           properties:
             training:
@@ -259,6 +276,7 @@ components:
     TrainingDeleteRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TrainingRequestDebug'
         - type: object
           properties:
             training:
@@ -267,6 +285,7 @@ components:
     TrainingSearchRequest:
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TrainingRequestDebug'
         - type: object
           properties:
             trainingFilter:
@@ -337,6 +356,37 @@ components:
       type: string
       description: Идентификатор тренировки клиента
 
-    TrainingLock:
+    # STUBS ======================
+    TrainingRequestDebugMode:
       type: string
-      description: Версия оптимистичной блокировки
+      enum:
+        - prod
+        - test
+        - stub
+
+    TrainingRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/TrainingDebug'
+
+    TrainingDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/TrainingRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/TrainingRequestDebugStubs'
+
+    TrainingRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badTitle
+        - badDescription
+        - badVisibility
+        - cannotDelete
+        - badSearchString
