@@ -5,7 +5,7 @@ plugins {
     application
 }
 
-group = "ru.otus.fitness-trainers"
+group = "ru.otus.fitness.trainers"
 version = "1.0-SNAPSHOT"
 
 allprojects {
